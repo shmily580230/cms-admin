@@ -100,7 +100,7 @@ public class UserController {
      */
     @SysLog("用户保存修改")
     @PostMapping
-    public R post(@Valid @RequestBody UserEntity entity) {
+    public R<Void> post(@Valid @RequestBody UserEntity entity) {
         if (Objects.isNull(entity.getId())) {
             Assert.isBlank(entity.getPassword(), "密码不能为空");
         }
@@ -116,7 +116,7 @@ public class UserController {
      */
     @SysLog("删除用户")
     @DeleteMapping
-    public R del(@RequestBody List<Long> ids) {
+    public R<Void> del(@RequestBody List<Long> ids) {
         if (ids.stream().anyMatch(e -> Arrays.asList(1L, UserUtil.getUserId()).contains(e))) {
             return R.error("用户不能删除");
         }

@@ -1,5 +1,6 @@
 package com.mm.modules.sys.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,7 +15,7 @@ import com.mm.modules.sys.service.UserService;
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
 
-import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.Opt;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.RequiredArgsConstructor;
@@ -34,17 +35,15 @@ public class OptLogController {
      * 列表
      */
     @GetMapping
-    public R.Page<List<OptLogEntity>> page(Integer page, Integer limit, String key) {
+    public R<List<OptLogEntity>> get(Integer page, Integer limit, String key) {
         QueryWrapper qw = QueryWrapper.create().like(OptLogEntity::getOperation, key, StrUtil.isNotBlank(key));
         Page<OptLogEntity> res = optLogService.page(new Page<>(page, limit), qw);
-        if (CollUtil.isNotEmpty(res.getRecords())) {
-            List<Long> userIds = res.getRecords().stream().map(OptLogEntity::getUserId).collect(Collectors.toList());
-            List<UserEntity> users = userService.list(QueryWrapper.create().in(UserEntity::getId, userIds));
-            for (OptLogEntity sysLog : res.getRecords()) {
-                sysLog.setUsername(users.stream()
-                        .filter(e -> NumberUtil.equals(sysLog.getUserId(), e.getId()))
-                        .findFirst().map(UserEntity::getUsername).orElse(""));
-            }
+        List<Long> userIds = res.getRecords().stream().map(OptLogEntity::getUserId).collect(Collectors.toList());
+        List<UserEntity> users = Opt.ofEmptyAble(userIds).map(e -> userService.listByIds(e)).orElse(new ArrayList<>());
+        for (OptLogEntity sysLog : res.getRecords()) {
+            sysLog.setUsername(users.stream()
+                    .filter(e -> NumberUtil.equals(sysLog.getUserId(), e.getId()))
+                    .findFirst().map(UserEntity::getUsername).orElse(""));
         }
         return R.ok(res);
     }

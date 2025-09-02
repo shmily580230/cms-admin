@@ -43,7 +43,7 @@ public class RoleController {
      * 角色列表
      */
     @GetMapping
-    public R<List<RoleEntity>> list(Integer page, Integer limit) {
+    public R<List<RoleEntity>> get(Integer page, Integer limit) {
         if (Objects.isNull(page) || Objects.isNull(limit)) {
             List<RoleEntity> list = roleService.list();
             return R.ok(list, Convert.toLong(list.size()));
@@ -66,7 +66,7 @@ public class RoleController {
      */
     @SysLog("保存角色")
     @PostMapping
-    public R post(@RequestBody RoleEntity role) {
+    public R<Void> post(@RequestBody RoleEntity role) {
         roleService.saveOrUpdate(role);
         return R.ok();
     }
@@ -76,7 +76,7 @@ public class RoleController {
      */
     @SysLog("删除角色")
     @DeleteMapping
-    public R del(@RequestBody List<Long> ids) {
+    public R<Void> del(@RequestBody List<Long> ids) {
         roleService.removeByIds(ids);
         return R.ok();
     }

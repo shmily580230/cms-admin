@@ -9,9 +9,9 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.mm.common.annotation.RestPathController;
 import com.mm.common.annotation.SysLog;
@@ -58,8 +58,8 @@ public class MenuController {
     /**
      * 菜单列表
      */
-    @RequestMapping
-    public R<List<MenuEntity>> list() {
+    @GetMapping
+    public R<List<MenuEntity>> get() {
         List<MenuEntity> list = menuService.list(QueryWrapper.create().orderBy(MenuEntity::getSort, false));
         List<MenuEntity> pm = list.stream()
                 .filter(e -> e.getPid() == 0)
@@ -73,7 +73,7 @@ public class MenuController {
      */
     @SysLog("菜单保存修改")
     @PostMapping
-    public R post(@Valid @RequestBody MenuEntity menu) {
+    public R<Void> post(@Valid @RequestBody MenuEntity menu) {
         menuService.saveOrUpdate(menu);
         return R.ok();
     }
@@ -83,7 +83,7 @@ public class MenuController {
      */
     @SysLog("菜单删除")
     @DeleteMapping
-    public R del(@RequestBody Long[] ids) {
+    public R<Void> del(@RequestBody Long[] ids) {
         for (Long id : ids) {
             // 判断是否有子菜单或按钮
             long mcs = menuService.count(QueryWrapper.create().eq(MenuEntity::getPid, id));
