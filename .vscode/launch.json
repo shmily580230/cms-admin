@@ -1,0 +1,13 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "cms-admin",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.mm.App",
+            "projectName": "cms-admin",
+            "args": "",
+        }
+    ]
+}
