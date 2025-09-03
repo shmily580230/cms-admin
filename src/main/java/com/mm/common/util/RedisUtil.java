@@ -1,17 +1,17 @@
 package com.mm.common.util;
 
+import cn.hutool.json.JSONUtil;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisCallback;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.serializer.RedisSerializer;
+import org.springframework.stereotype.Component;
+
 import java.time.Duration;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-
-import org.springframework.data.redis.core.RedisCallback;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.RedisSerializer;
-import org.springframework.stereotype.Component;
-
-import cn.hutool.json.JSONUtil;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * Redis工具类
@@ -27,6 +27,7 @@ public class RedisUtil {
      */
     public static final Long DEFAULT_EXPIRE = 86400L;
     public static RedisTemplate<String, String> redisTemplate;
+    public static StringRedisTemplate stringRedisTemplate;
 
     public RedisUtil(RedisTemplate<String, String> redisTemplate) {
         RedisUtil.redisTemplate = redisTemplate;
@@ -50,7 +51,7 @@ public class RedisUtil {
      */
     public static void removePattern(String pattern) {
         Set<String> keys = redisTemplate.keys(pattern);
-        if (keys != null && !keys.isEmpty()) {
+        if (!keys.isEmpty()) {
             redisTemplate.delete(keys);
         }
     }
@@ -60,8 +61,8 @@ public class RedisUtil {
      *
      * @param key
      */
-    public static boolean remove(String key) {
-        return redisTemplate.delete(key);
+    public static void remove(String key) {
+        redisTemplate.delete(key);
     }
 
     /**
@@ -152,7 +153,7 @@ public class RedisUtil {
      * @param key
      * @return
      */
-    public static Set hashKeyList(String key) {
+    public static Set<Object> hashKeyList(String key) {
         return redisTemplate.opsForHash().keys(key);
     }
 
@@ -172,7 +173,7 @@ public class RedisUtil {
      * @param key
      * @param objs
      */
-    public static void addLists(String key, List objs) {
+    public static void addLists(String key, List<Object> objs) {
         final RedisSerializer<String> serializer = redisTemplate.getStringSerializer();
         redisTemplate.executePipelined((RedisCallback<Object>) redisConnection -> {
             redisConnection.openPipeline();
@@ -191,12 +192,11 @@ public class RedisUtil {
      * 分页获取list
      *
      * @param key
-     * @param clazz
      * @param start
      * @param end
      * @return
      */
-    public static List<String> getListPage(String key, Class clazz, int start, int end) {
+    public static List<String> getListPage(String key, int start, int end) {
         return redisTemplate.opsForList().range(key, start, end);
     }
 
