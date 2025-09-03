@@ -1,18 +1,6 @@
 package com.mm.modules.sys.controller;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.validation.Valid;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-
+import cn.hutool.core.util.NumberUtil;
 import com.mm.common.annotation.RestPathController;
 import com.mm.common.annotation.SysLog;
 import com.mm.common.util.Assert;
@@ -20,18 +8,27 @@ import com.mm.common.util.R;
 import com.mm.modules.sys.entity.MenuEntity;
 import com.mm.modules.sys.service.MenuService;
 import com.mybatisflex.core.query.QueryWrapper;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
-import cn.hutool.core.util.NumberUtil;
+import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 系统菜单
  *
  * @author lwl
  */
+@RequiredArgsConstructor
 @RestPathController("/api/menu")
 public class MenuController {
-    @Autowired
-    private MenuService menuService;
+    final MenuService menuService;
 
     /**
      * 子菜单

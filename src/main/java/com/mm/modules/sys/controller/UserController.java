@@ -1,19 +1,9 @@
 package com.mm.modules.sys.controller;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
-import javax.validation.Valid;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.crypto.SecureUtil;
 import com.mm.common.annotation.RestPathController;
 import com.mm.common.annotation.SysLog;
 import com.mm.common.util.Assert;
@@ -28,12 +18,19 @@ import com.mm.modules.sys.service.UserRoleService;
 import com.mm.modules.sys.service.UserService;
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
-
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.NumberUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.crypto.SecureUtil;
 import io.micrometer.core.instrument.util.StringUtils;
+import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import javax.validation.Valid;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * 系统用户
@@ -41,14 +38,12 @@ import io.micrometer.core.instrument.util.StringUtils;
  * @author lwl
  */
 @Validated
+@RequiredArgsConstructor
 @RestPathController("/api/user")
 public class UserController {
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private UserRoleService userRoleService;
-    @Autowired
-    private MenuService menuService;
+    final UserService userService;
+    final UserRoleService userRoleService;
+    final MenuService menuService;
 
     /**
      * 当前用户信息

@@ -1,16 +1,7 @@
 package com.mm.modules.sys.controller;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.util.NumberUtil;
 import com.mm.common.annotation.RestPathController;
 import com.mm.common.annotation.SysLog;
 import com.mm.common.util.R;
@@ -20,9 +11,16 @@ import com.mm.modules.sys.service.RoleMenuService;
 import com.mm.modules.sys.service.RoleService;
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
+import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
-import cn.hutool.core.convert.Convert;
-import cn.hutool.core.util.NumberUtil;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * 角色管理
@@ -30,14 +28,12 @@ import cn.hutool.core.util.NumberUtil;
  * @author lwl
  */
 @Validated
+@RequiredArgsConstructor
 @RestPathController("/api/role")
 public class RoleController {
 
-    @Autowired
-    private RoleService roleService;
-
-    @Autowired
-    private RoleMenuService roleMenuService;
+    final RoleService roleService;
+    final RoleMenuService roleMenuService;
 
     /**
      * 角色列表

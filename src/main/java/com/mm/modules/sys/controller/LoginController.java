@@ -1,11 +1,6 @@
 package com.mm.modules.sys.controller;
 
-import javax.validation.Valid;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-
+import cn.hutool.crypto.SecureUtil;
 import com.mm.common.annotation.RestPathController;
 import com.mm.common.util.Assert;
 import com.mm.common.util.R;
@@ -14,19 +9,22 @@ import com.mm.modules.sys.dto.LoginDTO;
 import com.mm.modules.sys.entity.UserEntity;
 import com.mm.modules.sys.service.UserService;
 import com.mybatisflex.core.query.QueryWrapper;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
-import cn.hutool.crypto.SecureUtil;
+import javax.validation.Valid;
 
 /**
  * 登录
  *
  * @author lwl
  */
+@RequiredArgsConstructor
 @RestPathController("/login")
 public class LoginController {
 
-    @Autowired
-    private UserService userService;
+    final UserService userService;
 
     /**
      * 登录
